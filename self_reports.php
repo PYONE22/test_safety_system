@@ -6,7 +6,15 @@ require_once 'db.php';
 
 try {
 
-    $stmt = $pdo->query("SELECT * FROM safety_reports ORDER BY report_time DESC");
+   $stmt = $pdo->query("
+SELECT
+    safety_reports.*,
+    employees.name
+FROM safety_reports
+JOIN employees
+ON safety_reports.employee_id = employees.employee_id
+ORDER BY report_time DESC
+");
 
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
     $safety_reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -22,7 +30,7 @@ try {
 
 <head>
     <meta charset="UTF-8">
-    <title>自分の安否一覧</title>
+    <title>社員一覧</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -34,7 +42,7 @@ try {
     </div>
 
     <div class="container">
-        <h2>自分の安否一覧</h2>
+        <h2>安否一覧</h2>
 
         <p>ログイン中の社員ID：
             <?= htmlspecialchars($_SESSION["employee_id"]) ?>
@@ -44,17 +52,26 @@ try {
 
         <table border="1" cellpadding="8">
             <tr>
+                <th>名前</th>
                 <th>報告日時</th>
                 <th>状況</th>
                 <th>コメント</th>
+                <th>削除</th>
             </tr>
 
             <?php if (!empty($safety_reports)): ?>
                 <?php foreach ($safety_reports as $report): ?>
-                    <tr>    
+                    <tr>
+                        <td><?= htmlspecialchars($report["name"]) ?></td>
                         <td><?= htmlspecialchars($report["report_time"]) ?></td>
                         <td><?= htmlspecialchars($report["status"]) ?></td>
                         <td><?= htmlspecialchars($report["comment"]) ?></td>
+                        <td>
+                            <a href="delete_report.php?id=<?= $report["report_id"] ?>"
+                            onclick="return confirm('削除しますか？')">
+                            削除
+                            </a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>

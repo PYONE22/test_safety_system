@@ -24,7 +24,7 @@
     <h2>安否報告</h2>
     <p>現在の状況を選択してください</p>
 
-    <form method="get" action="store.php"><!--ここ変えた-->
+    <form method="post" action="store.php"><!--ここ変えた-->
         <div class="status-buttons">
             <label>
                 <input type="radio" name="status" value="無事" required>

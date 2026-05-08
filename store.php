@@ -1,22 +1,24 @@
 <?php
 
+session_start();
+
 require_once 'db.php';
 
-$status = trim($_GET['status'] ?? '');
 
+$status = trim($_POST['status'] ?? '');
+$comment = trim($_POST['comment'] ?? '');
 
-$comment = trim($_GET['comment'] ?? '');
 
 if (empty($status)) {
     echo "<h2>エラー</h2>";
     echo "<p>状況を選択してください。</p>";
-    echo '<p><a href="self_reports.php">入力画面に戻る</a></p>';
+    echo '<p><a href="reports.php">入力画面に戻る</a></p>';
     exit;
 }
 if (empty($comment)) {
     echo "<h2>エラー</h2>";
     echo "<p>コメントを入力してください。</p>";
-    echo '<p><a href="self_reports.php">入力画面に戻る</a></p>';
+    echo '<p><a href="report.php">入力画面に戻る</a></p>';
     exit;
 }
 try {
@@ -31,6 +33,7 @@ try {
 
     $pdo->commit();
 
+    
 
     header("Location: self_reports.php");
     exit;
@@ -43,6 +46,6 @@ try {
 
     echo "<h2>エラー</h2>";
     echo "<p>データの保存に失敗しました：" . htmlspecialchars($e->getMessage()) . "</p>";
-    echo '<p><a href="self_reports.php">入力画面に戻る</a></p>';
+    echo '<p><a href="report.php">入力画面に戻る</a></p>';
 }
 ?>
